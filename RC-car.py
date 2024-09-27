@@ -26,7 +26,6 @@ model = None
 last_function_call_time = time.time()
 ranges = {
     'high': 75,
-    'medium': 50,                           
     'low': 25
 }
 
@@ -106,12 +105,8 @@ def attention_callback(value):
     if current_time - last_function_call_time >= 1:
         if value > ranges['high']:
             A()
-        elif value > ranges['medium']:
-            B()
-        elif value > ranges['low']:
-            C()
-        else:
-            D()
+        else:  # This now covers both medium and low
+            D()  # Call D for low attention
         last_function_call_time = current_time
 
 @app.route('/get_attention', methods=['GET'])
@@ -124,7 +119,6 @@ def update_ranges():
     global ranges
     new_ranges = request.json
     ranges['high'] = new_ranges.get('high', ranges['high'])
-    ranges['medium'] = new_ranges.get('medium', ranges['medium'])
     ranges['low'] = new_ranges.get('low', ranges['low'])
     print(f"Ranges updated: {ranges}")
     return jsonify({"message": "Ranges updated successfully"}), 200

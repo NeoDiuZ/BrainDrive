@@ -4,7 +4,6 @@ import axios from 'axios';
 const HeadsetAttentionDisplay = () => {
   const [ranges, setRanges] = useState({
     high: 75,
-    medium: 50,
     low: 25
   });
   const [liveAttention, setLiveAttention] = useState(0);
@@ -61,22 +60,17 @@ const HeadsetAttentionDisplay = () => {
     if (value < ranges.low) {
       // Blue range (bottom)
       return { x: 0, y: maxMove, rotation: 0};
-    } else if (value < ranges.medium) {
-      // Green range (left)
-      return { x: -maxMove, y: 0, rotation: -90};
     } else if (value < ranges.high) {
-      // Yellow range (right)
-      return { x: maxMove, y: 0, rotation: 90};
-    } else {
       // Red range (top)
       return { x: 0, y: -maxMove, rotation: 0};
+    } else {
+      // Out of range
+      return { x: 0, y: 0, rotation: 0};
     }
   };
 
   const getActiveWave = (value) => {
     if (value >= ranges.high) return 'red';
-    if (value >= ranges.medium) return 'yellow';
-    if (value >= ranges.low) return 'green';
     return 'blue';
   };
 
@@ -86,12 +80,6 @@ const HeadsetAttentionDisplay = () => {
     switch (activeWave) {
       case 'red':
         intensity = (value - ranges.high) / (100 - ranges.high);
-        break;
-      case 'yellow':
-        intensity = (value - ranges.medium) / (ranges.high - ranges.medium);
-        break;
-      case 'green':
-        intensity = (value - ranges.low) / (ranges.medium - ranges.low);
         break;
       case 'blue':
         intensity = value / ranges.low;
@@ -208,8 +196,6 @@ const HeadsetAttentionDisplay = () => {
       <div className="mt-6 space-y-2">
         <h3 className="text-lg font-semibold">Current Ranges:</h3>
         <p>Full Forward (Red - Top): value >= {ranges.high}</p>
-        <p>Right (Yellow - Right): {ranges.high} > value >= {ranges.medium}</p>
-        <p>Left (Green - Left): {ranges.medium} > value >= {ranges.low}</p>
         <p>Stop (Blue - Bottom): {ranges.low} > value >= 0</p>
       </div>
 

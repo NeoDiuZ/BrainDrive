@@ -4,7 +4,6 @@ import axios from 'axios';
 const AttentionRangeSlider = () => {
   const [ranges, setRanges] = useState({
     high: 75,
-    medium: 50,
     low: 25
   });
   const [liveAttention, setLiveAttention] = useState(0); // New state for live attention
@@ -51,11 +50,11 @@ const AttentionRangeSlider = () => {
       });
   };
 
+  // Update getColor function to remove medium range
   const getColor = (value) => {
     if (value >= ranges.high) return 'bg-red-500';
-    if (value >= ranges.medium) return 'bg-yellow-500';
-    if (value >= ranges.low) return 'bg-green-500';
-    return 'bg-blue-500';
+    if (value >= ranges.low) return 'bg-blue-500';
+    return 'bg-gray-500'; // Default color for values below low
   };
 
   return (
@@ -111,9 +110,8 @@ const AttentionRangeSlider = () => {
         </div>
         <div className="flex justify-between text-sm mt-1">
           <span>0</span>
-          <span>25</span>
-          <span>50</span>
-          <span>75</span>
+          <span>{ranges.low}</span> {/* Updated to show low range */}
+          <span>{ranges.high}</span> {/* Updated to show high range */}
           <span>100</span>
         </div>
       </div>
@@ -121,8 +119,6 @@ const AttentionRangeSlider = () => {
       <div className="mt-6 space-y-2">
         <h3 className="text-lg font-semibold">Current Ranges:</h3>
         <p>A(): value > {ranges.high}</p>
-        <p>B(): {ranges.high} >= value > {ranges.medium}</p>
-        <p>C(): {ranges.medium} >= value > {ranges.low}</p>
         <p>D(): {ranges.low} >= value >= 0</p>
       </div>
     </div>
